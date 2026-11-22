@@ -1,5 +1,7 @@
 import { registerSW } from 'virtual:pwa-register';
 
+import { markAutoReload } from './auto-reload';
+
 // Long-lived sessions (an installed app left open) only look for a new service
 // worker on navigation, so check periodically too.
 const UPDATE_CHECK_INTERVAL = 60 * 60 * 1000;
@@ -37,12 +39,14 @@ function retireAngularWorker(): boolean {
  * is looking: once the page is hidden (another tab, the app sent to the
  * background, the phone locked). A closed app picks the update up on its next
  * launch anyway, so there is never anything to click. The trip is saved, so
- * the reload does not lose it.
+ * the reload does not lose it, and it is flagged so that analytics do not
+ * count it as a visit.
  */
 function applyWhenHidden(update: () => Promise<void>): void {
   const apply = () => {
     if (document.visibilityState === 'hidden') {
       document.removeEventListener('visibilitychange', apply);
+      markAutoReload();
       void update();
     }
   };

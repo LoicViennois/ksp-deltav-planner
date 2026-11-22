@@ -33,7 +33,10 @@ const matomo: Plugin = {
       injectTo: 'head',
       children: `
       var _paq = (window._paq = window._paq || []);
-      _paq.push(['trackPageView']);
+      // Not for a reload made by an update (see src/lib/auto-reload.ts).
+      if (!('autoReload' in document.documentElement.dataset)) {
+        _paq.push(['trackPageView']);
+      }
       _paq.push(['enableLinkTracking']);
       (function () {
         var u = '//matomo.loicviennois.com/';
