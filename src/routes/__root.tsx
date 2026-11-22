@@ -4,6 +4,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import { Header } from '../components/Header';
 import { Starfield } from '../components/Starfield';
+import { skipAutoReloadPageView } from '../lib/auto-reload';
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -17,7 +18,7 @@ function RootLayout() {
       <main className="mx-auto max-w-(--shell-width) px-4 pt-6 pb-24 md:py-5 lg:px-6">
         <Outlet />
       </main>
-      <Analytics />
+      <Analytics beforeSend={skipAutoReloadPageView} />
       <SpeedInsights />
     </>
   );

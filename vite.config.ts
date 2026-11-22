@@ -33,7 +33,10 @@ const matomo: Plugin = {
       injectTo: 'head',
       children: `
       var _paq = (window._paq = window._paq || []);
-      _paq.push(['trackPageView']);
+      // Not for a reload made by an update (see src/lib/auto-reload.ts).
+      if (!('autoReload' in document.documentElement.dataset)) {
+        _paq.push(['trackPageView']);
+      }
       _paq.push(['enableLinkTracking']);
       (function () {
         var u = '//matomo.loicviennois.com/';
@@ -62,8 +65,8 @@ export default defineConfig({
     tailwindcss(),
     matomo,
     VitePWA({
-      // Registered from src/lib/update.ts; a waiting worker activates on the
-      // next launch rather than reloading open tabs in the background.
+      // Registered from src/lib/update.ts, which activates an update once the
+      // page is hidden rather than on the spot.
       registerType: 'prompt',
       injectRegister: false,
       includeAssets: ['favicon.svg', 'favicon.64.png', 'apple-touch-icon.png'],
