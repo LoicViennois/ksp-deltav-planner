@@ -70,6 +70,9 @@ export default defineConfig({
       registerType: 'prompt',
       injectRegister: false,
       includeAssets: ['favicon.svg', 'favicon.64.png', 'apple-touch-icon.png'],
+      // The manifest icons are only fetched when the app is installed, so
+      // precaching them would cost every visitor a request per icon.
+      includeManifestIcons: false,
       manifest: {
         name: 'KSP Delta-V Planner',
         short_name: 'KSP Δv Planner',
@@ -97,8 +100,16 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,png,svg,webp,woff2}'],
-        // Only there to retire the former Angular service worker.
-        globIgnores: ['ngsw-worker.js'],
+        globIgnores: [
+          // Only there to retire the former Angular service worker.
+          'ngsw-worker.js',
+          // Only for the manifest (installed app) and the social previews.
+          'icons/**',
+          'favicon.512.png',
+          // Font subsets for scripts the app does not use: the browser still
+          // fetches them on demand through their unicode-range.
+          '**/*-{cyrillic,greek,vietnamese}-*.woff2',
+        ],
         navigateFallback: '/index.html',
       },
     }),

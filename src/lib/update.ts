@@ -3,8 +3,9 @@ import { registerSW } from 'virtual:pwa-register';
 import { markAutoReload } from './auto-reload';
 
 // Long-lived sessions (an installed app left open) only look for a new service
-// worker on navigation, so check periodically too.
-const UPDATE_CHECK_INTERVAL = 60 * 60 * 1000;
+// worker on navigation, so check periodically too, though not too often:
+// each check is a CDN request for sw.js.
+const UPDATE_CHECK_INTERVAL = 6 * 60 * 60 * 1000;
 
 /**
  * Retires the service worker of the former Angular app when it still controls
